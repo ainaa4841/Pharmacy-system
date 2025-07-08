@@ -49,13 +49,13 @@ if choice == "Register":
             register_user(username, password, email)
             st.success(f"Registration successful! Please log in.")
 
-elif choice == "Login":
+if choice == "Login":
     st.subheader("Login")
-    username_or_email = st.text_input("Username or Email")
+    username = st.text_input("Username")
     password = st.text_input("Password", type="password")
 
     if st.button("Login"):
-        role, username, email = login_user(username_or_email, password)
+        role, username, email = login_user(username, password)
         if role:
             st.session_state.logged_in = True
             st.session_state.user_role = role
@@ -63,6 +63,7 @@ elif choice == "Login":
             st.session_state.user_email = email
             if role == "Customer":
                 st.session_state.customer_id = get_customer_id(username)
+            st.success(f"Welcome {role}, {username}!")
             st.rerun()
         else:
             st.error("Invalid credentials!")
