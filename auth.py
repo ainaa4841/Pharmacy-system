@@ -14,12 +14,27 @@ def register_user(username, password, role, email):
     worksheet = spreadsheet.worksheet("Users")
     worksheet.append_row([username, password, role, email])
 
-def login_user(username_or_email, password):
-    worksheet = spreadsheet.worksheet("Users")
-    for user in worksheet.get_all_records():
-        if (user["Username"] == username_or_email or user["Email"] == username_or_email) and user["Password"] == password:
-            return user["Role"], user["Username"], user["Email"]
-    return None, None, None
+def login_user(username, password):
+    try:
+        # Check Customers sheet
+        customer_ws = spreadsheet.worksheet("Customers")
+        for customer in customer_ws.get_all_records():
+            if customer.get("customerUsername") == username and customer.get("customerPassword") == password:
+                return "Customer", customer["customerUsername"], customer["customerEmail"]
+
+        # Check Pharmacist sheet
+        pharmacist_ws = spreadsheet.worksheet("Pharmacist")
+        for pharm in pharmacist_ws.get_all_records():
+            if pharm.get("pharmacistUsername") == username and pharm.get("pharmacistPassword") == password:
+                return "Pharmacist", pharm["pharmacistUsername"], pharm["pharmacistEmail"]
+
+        # No match found
+        return None, None, None
+
+    except Exception as e:
+        print(f"Login error: {e}")
+        return None, None, None
+
 
 def get_customer_id(username):
     worksheet = spreadsheet.worksheet("Customers")
