@@ -32,23 +32,6 @@ if st.session_state.logged_in:
 
 choice = st.sidebar.selectbox("Menu", menu)
 
-if choice == "Register":
-    st.subheader("Customer Registration")
-    username = st.text_input("Username")
-    password = st.text_input("Password", type="password")
-    email = st.text_input("Email")
-
-    if st.button("Register"):
-        if not all([username, password, email]):
-            st.error("Please fill in all required fields.")
-        elif not check_password_complexity(password):
-            st.error("Password must be at least 8 characters and contain a special character.")
-        elif check_email_exists(email):
-            st.error("Email already exists. Please use a different email or login.")
-        else:
-            register_user(username, password, email)
-            st.success(f"Registration successful! Please log in.")
-
 if choice == "Login":
     st.subheader("Login")
     username = st.text_input("Username")
@@ -63,7 +46,6 @@ if choice == "Login":
             st.session_state.user_email = email
             if role == "Customer":
                 st.session_state.customer_id = get_customer_id(username)
-            st.success(f"Welcome {role}, {username}!")
             st.rerun()
         else:
             st.error("Invalid credentials!")
