@@ -8,17 +8,14 @@ from google_sheets import (
 )
 import os
 import pandas as pd
-from collections import defaultdict
 
 st.set_page_config(page_title="Farmasi Pantai Hillpark", layout="wide")
 
-# Load CSS
 with open("css/style.css") as f:
     st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
 st.title("Farmasi Pantai Hillpark Appointment System")
 
-# Session defaults
 if 'logged_in' not in st.session_state:
     st.session_state.logged_in = False
     st.session_state.user_role = ''
@@ -28,7 +25,6 @@ if 'logged_in' not in st.session_state:
 
 menu = ["Login", "Register"]
 if st.session_state.logged_in:
-    menu = ["Logout"]
     if st.session_state.user_role == 'Customer':
         menu = ["Book Appointment", "My Appointments", "Logout"]
     elif st.session_state.user_role == 'Pharmacist':
@@ -36,30 +32,23 @@ if st.session_state.logged_in:
 
 choice = st.sidebar.selectbox("Menu", menu)
 
-# --------------------------------------------
-# Register
 if choice == "Register":
     st.subheader("Customer Registration")
     username = st.text_input("Username")
     password = st.text_input("Password", type="password")
-    full_name = st.text_input("Full Name")
     email = st.text_input("Email")
-    phone = st.text_input("Phone Number")
 
     if st.button("Register"):
-        if not all([username, password, full_name, email, phone]):
+        if not all([username, password, email]):
             st.error("Please fill in all required fields.")
         elif not check_password_complexity(password):
             st.error("Password must be at least 8 characters and contain a special character.")
         elif check_email_exists(email):
             st.error("Email already exists. Please use a different email or login.")
         else:
-            register_user(username, password, "Customer", email)
-            customer_id = save_customer([username, password, full_name, email, phone, ""])
-            st.success(f"Registration successful! Your customer ID is {customer_id}. Please log in.")
+            register_user(username, password, email)
+            st.success(f"Registration successful! Please log in.")
 
-# --------------------------------------------
-# Login
 elif choice == "Login":
     st.subheader("Login")
     username_or_email = st.text_input("Username or Email")
