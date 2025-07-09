@@ -52,7 +52,7 @@ if choice == "Register":
         elif check_email_exists(email):
             st.error("Email already exists. Please use a different email or login.")
         else:
-            register_user(username, password, "Customer", email)
+            register_user(username, password, full_name, email, phone)
             customer_id = save_customer([username, password, full_name, email, phone, ""])
             st.success(f"Registration successful! Your customer ID is {customer_id}. Please log in.")
 
