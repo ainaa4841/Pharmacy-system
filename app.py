@@ -302,7 +302,7 @@ elif choice == "Available Slots":
 
 
 
-  # --------------------------------------------
+# --------------------------------------------
 # Add Report
 elif choice == "Add Report":
     st.subheader("📝 Add Appointment Report")
@@ -316,11 +316,11 @@ elif choice == "Add Report":
         if not all([customer_id, appt_id, content]):
             st.error("Please complete all fields.")
         else:
-            # Generate reportID
+            # Generate numeric reportID with no prefix
             reports = get_all_reports()
-            existing_ids = [int(str(r["reportID"]).replace("R", "")) for r in reports if str(r["reportID"]).startswith("R")]
+            existing_ids = [int(r["reportID"]) for r in reports if str(r["reportID"]).isdigit()]
             next_id = max(existing_ids, default=0) + 1
-            report_id = f"R{next_id:04d}"
+            report_id = next_id
 
             # Save report to sheet
             save_report([report_id, customer_id, appt_id, str(report_date), content])
@@ -335,7 +335,6 @@ elif choice == "Add Report":
     customer_ids = sorted(set(str(r["customerID"]) for r in reports))
     appt_ids = sorted(set(str(r["appointmentID"]) for r in reports))
 
-
     selected_cust_id = st.selectbox("🔍 Filter by Customer ID", ["All"] + customer_ids)
     selected_appt_id = st.selectbox("📎 Filter by Appointment ID", ["All"] + appt_ids)
 
@@ -345,7 +344,7 @@ elif choice == "Add Report":
         filtered_reports = [r for r in filtered_reports if str(r["customerID"]) == selected_cust_id]
     if selected_appt_id != "All":
         filtered_reports = [r for r in filtered_reports if str(r["appointmentID"]) == selected_appt_id]
-    
+
     if not filtered_reports:
         st.info("No matching reports found.")
     else:
@@ -368,6 +367,7 @@ elif choice == "Add Report":
                     <div style="margin-left: 15px;">{rep['reportContent']}</div>
                 </div>
             """, unsafe_allow_html=True)
+
 
 
 
