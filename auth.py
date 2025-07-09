@@ -43,7 +43,7 @@ def get_customer_id(username):
             return str(record["customerID"])
     return None
 
-ddef check_email_exists(email):
+def check_email_exists(email):
     worksheet = spreadsheet.worksheet("Customers")
     return any(user["customerEmail"] == email for user in worksheet.get_all_records())
 
