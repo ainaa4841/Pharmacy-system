@@ -1,10 +1,10 @@
-import streamlit as st
+import streamlit as st 
 import re
 from sheets_client import spreadsheet
 
-def register_user(username, password, full_name, email, phone):
+def register_user(customerID, customerUsername, customerPassword, customerName, customerEmail, customerNumber):
     worksheet = spreadsheet.worksheet("Customer")
-    worksheet.append_row([customerID, customerUsername, customerPassword, customerName,customerEmail,customerNumber])
+    worksheet.append_row([customerID, customerUsername, customerPassword, customerName, customerEmail, customerNumber])
 
 def login_user(username, password):
     try:
@@ -27,17 +27,16 @@ def login_user(username, password):
         print(f"Login error: {e}")
         return None, None, None
 
-
 def get_customer_id(username):
     worksheet = spreadsheet.worksheet("Customer")
     for record in worksheet.get_all_records():
-        if record["customerUsername"] == username:
-            return str(record["customerID"])
+        if record.get("customerUsername") == username:
+            return str(record.get("customerID"))
     return None
 
 def check_email_exists(email):
     worksheet = spreadsheet.worksheet("Customer")
-    return any(customer["customerEmail"] == email for customer in worksheet.get_all_records()))
+    return any(customer.get("customerEmail") == email for customer in worksheet.get_all_records())
 
 def check_password_complexity(password):
     return len(password) >= 8 and re.search(r"[!@#$%^&*(),.?\":{}|<>]", password)
