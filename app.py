@@ -222,7 +222,7 @@ elif choice == "Manage Appointments":
             cust = customers.get(str(appt["customerID"]), {})
             full_name = cust.get("customerName", "Unknown")
             email = cust.get("customerEmail", "N/A")
-            phone = cust.get("customerNumberr", "N/A")
+            phone = cust.get("customerNumber", "N/A")
             referral_path = appt.get("appointmentReferralLetter", "")
 
             st.markdown(f"""
