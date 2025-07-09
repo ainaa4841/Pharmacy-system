@@ -372,7 +372,7 @@ elif choice == "Add Report":
                         <strong>👤 Customer ID:</strong> {rep.get('customerID', '')}<br>
                         <strong>📎 Appointment ID:</strong> {rep.get('appointmentID', '')}<br>
                         <strong>📅 Date:</strong> {rep.get('reportDate', '')}<br>
-                        <strong>📝 Content:</strong>\n
+                        <strong>📝 Content:</strong><br>
                         <div style="margin-left: 15px;">{rep.get('reportContent', '')}</div>
                     </div>
                 """, unsafe_allow_html=True)
