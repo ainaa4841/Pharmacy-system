@@ -313,26 +313,18 @@ elif choice == "Add Report":
 
     if st.button("Save Report"):
         if not all([customer_id, appt_id, content]):
-            st.error("Please complete all fields.")
+            st.error("❌ Please complete all fields.")
         else:
-            save_report([appt_id, str(report_date), content])
+            save_report([customer_id, appt_id, str(report_date), content])
             st.success("✅ Report saved.")
 
     st.markdown("---")
     st.subheader("📄 View Submitted Reports")
 
     reports = get_all_reports()
-    appointments = get_appointments()
-
-    # Create a mapping of appointmentID to customerID
-    appt_to_customer = {str(a["appointmentID"]): str(a["customerID"]) for a in appointments}
-
-    # Attach customerID to each report
-    for rep in reports:
-        rep["customerID"] = appt_to_customer.get(str(rep["appointmentID"]), "Unknown")
 
     # Filter Options
-    customer_ids = sorted(set(r["customerID"] for r in reports if r["customerID"] != "Unknown"))
+    customer_ids = sorted(set(r["customerID"] for r in reports))
     appt_ids = sorted(set(r["appointmentID"] for r in reports))
 
     selected_cust_id = st.selectbox("🔍 Filter by Customer ID", ["All"] + customer_ids)
@@ -351,7 +343,6 @@ elif choice == "Add Report":
         for rep in filtered_reports:
             st.markdown(f"""
                 <div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; border-radius: 5px; background-color: #f8f8f8;">
-                    <strong>📋 Report ID:</strong> {rep['reportID']}<br>
                     <strong>👤 Customer ID:</strong> {rep['customerID']}<br>
                     <strong>📎 Appointment ID:</strong> {rep['appointmentID']}<br>
                     <strong>📅 Date:</strong> {rep['reportDate']}<br>
@@ -359,6 +350,7 @@ elif choice == "Add Report":
                     <div style="margin-left: 15px;">{rep['reportContent']}</div>
                 </div>
             """, unsafe_allow_html=True)
+
 
 # --------------------------------------------
 # Logout
