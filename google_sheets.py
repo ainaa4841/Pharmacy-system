@@ -126,4 +126,7 @@ def save_report(data):
     ws.append_row([rid] + data)
 
 def get_all_reports():
-    return spreadsheet.worksheet("Report").get_all_records()
+    sheet = spreadsheet.worksheet("Report")  # adjust sheet name as needed
+    data = sheet.get_all_records()  # This gives list of dicts based on headers row
+    return data
+
