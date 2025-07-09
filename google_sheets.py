@@ -9,20 +9,32 @@ from sheets_client import spreadsheet, creds
 
 FOLDER_ID = st.secrets["FOLDER_ID"]
 
-def generate_next_id(sheet, col_name):
-    records = spreadsheet.worksheet(sheet).get_all_records()
-    if not records: return 1
-    return int(records[-1][col_name]) + 1
+def generate_next_id(sheet_name, col_name):
+    worksheet = spreadsheet.worksheet(sheet_name)
+    records = worksheet.get_all_records()
+
+    if not records:
+        return 1
+
+    # Get the highest current ID
+    try:
+        last_id = int(records[-1][col_name])
+    except:
+        last_id = 0
+
+    return last_id + 1
+
 
 def register_user(username, password, full_name, email, phone):
     worksheet = spreadsheet.worksheet("Customer")
     worksheet.append_row([username, password, full_name, email, phone])
 
 def save_customer(data):
-    ws = spreadsheet.worksheet("Customer")
-    cid = generate_next_id("Customer", "customerID")
-    ws.append_row([cid] + data)
-    return cid
+    worksheet = spreadsheet.worksheet("Customer")
+    customer_id = generate_next_id("Customer", "customerID", prefix="C")
+    worksheet.append_row([customer_id] + data)  # data = [username, password, full_name, email, phone, ""]
+    return customer_id
+
 
 def save_appointment(data, referral_path=None):
     worksheet = spreadsheet.worksheet("Appointment")
