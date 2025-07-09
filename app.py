@@ -332,8 +332,9 @@ elif choice == "Add Report":
     reports = get_all_reports()
 
     # Filter Options
-    customer_ids = sorted(set(r["customerID"] for r in reports))
-    appt_ids = sorted(set(r["appointmentID"] for r in reports))
+    customer_ids = sorted(set(str(r["customerID"]) for r in reports))
+    appt_ids = sorted(set(str(r["appointmentID"]) for r in reports))
+
 
     selected_cust_id = st.selectbox("🔍 Filter by Customer ID", ["All"] + customer_ids)
     selected_appt_id = st.selectbox("📎 Filter by Appointment ID", ["All"] + appt_ids)
@@ -341,10 +342,10 @@ elif choice == "Add Report":
     # Apply filters
     filtered_reports = reports
     if selected_cust_id != "All":
-        filtered_reports = [r for r in filtered_reports if r["customerID"] == selected_cust_id]
+        filtered_reports = [r for r in filtered_reports if str(r["customerID"]) == selected_cust_id]
     if selected_appt_id != "All":
-        filtered_reports = [r for r in filtered_reports if r["appointmentID"] == selected_appt_id]
-
+        filtered_reports = [r for r in filtered_reports if str(r["appointmentID"]) == selected_appt_id]
+    
     if not filtered_reports:
         st.info("No matching reports found.")
     else:
