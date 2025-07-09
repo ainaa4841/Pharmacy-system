@@ -121,7 +121,7 @@ def get_all_customers():
     return spreadsheet.worksheet("Customer").get_all_records()
 
 def save_report(report_row):
-    worksheet = spreadsheet.worksheet("Reports")
+    worksheet = spreadsheet.worksheet("Report")
     worksheet.append_row(report_row)
 
 
