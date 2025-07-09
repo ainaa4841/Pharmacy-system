@@ -31,7 +31,7 @@ def register_user(username, password, full_name, email, phone):
 
 def save_customer(data):
     worksheet = spreadsheet.worksheet("Customer")
-    customer_id = generate_next_id("Customer", "customerID", prefix="C")
+    customer_id = generate_next_id("Customer", "customerID")
     worksheet.append_row([customer_id] + data)  # data = [username, password, full_name, email, phone, ""]
     return customer_id
 
