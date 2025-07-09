@@ -318,7 +318,7 @@ elif choice == "Add Report":
         else:
             # Generate reportID
             reports = get_all_reports()
-            existing_ids = [int(r["reportID"].replace("R", "")) for r in reports if r["reportID"].startswith("R")]
+            existing_ids = [int(str(r["reportID"]).replace("R", "")) for r in reports if str(r["reportID"]).startswith("R")]
             next_id = max(existing_ids, default=0) + 1
             report_id = f"R{next_id:04d}"
 
