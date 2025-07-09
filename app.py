@@ -319,11 +319,11 @@ elif choice == "Add Report":
         else:
             # Generate numeric reportID with no prefix
             reports = get_all_reports()
-            existing_ids = [int(r["reportID"]) for r in reports if str(r["reportID"]).isdigit()]
+            existing_ids = [int(r["reportID"]) for r in reports if str(r.get("reportID", "")).isdigit()]
             next_id = max(existing_ids, default=0) + 1
             report_id = next_id
 
-            # Save report to sheet
+            # Save to sheet
             save_report([report_id, customer_id, appt_id, str(report_date), content])
             st.success("✅ Report saved.")
 
@@ -332,45 +332,47 @@ elif choice == "Add Report":
 
     reports = get_all_reports()
 
-    # Get unique customer and appointment IDs
-    customer_ids = sorted(set(str(r["customerID"]) for r in reports))
-    appointment_ids = sorted(set(str(r["appointmentID"]) for r in reports))
-
-    selected_cust_id = st.selectbox("Filter by Customer ID", ["All"] + customer_ids)
-    selected_appt_id = st.selectbox("Filter by Appointment ID", ["All"] + appointment_ids)
-
-    # Apply filters
-    filtered_reports = reports
-    if selected_cust_id != "All":
-        filtered_reports = [r for r in filtered_reports if str(r["customerID"]) == selected_cust_id]
-    if selected_appt_id != "All":
-        filtered_reports = [r for r in filtered_reports if str(r["appointmentID"]) == selected_appt_id]
-
-    if not filtered_reports:
-        st.info("No matching reports found.")
+    # Defensive check for empty or malformed data
+    if not reports or not isinstance(reports, list) or not isinstance(reports[0], dict):
+        st.warning("⚠️ No valid reports found or data is not structured correctly.")
     else:
-        for rep in filtered_reports:
-            st.markdown(f"""
-                <div style="
-                    border: 1px solid rgba(120, 120, 120, 0.3);
-                    padding: 10px;
-                    margin-bottom: 10px;
-                    border-radius: 8px;
-                    background-color: rgba(255, 255, 255, 0.05);
-                    backdrop-filter: blur(2px);
-                    color: inherit;
-                ">
-                    <strong>📋 Report ID:</strong> {rep['reportID']}<br>
-                    <strong>👤 Customer ID:</strong> {rep['customerID']}<br>
-                    <strong>📎 Appointment ID:</strong> {rep['appointmentID']}<br>
-                    <strong>📅 Date:</strong> {rep['reportDate']}<br>
-                    <strong>📝 Content:</strong><br>
-                    <div style="margin-left: 15px;">{rep['reportContent']}</div>
-                </div>
-            """, unsafe_allow_html=True)
+        # Extract dropdown options safely
+        customer_ids = sorted(set(str(r.get("customerID", "")) for r in reports if "customerID" in r))
+        appointment_ids = sorted(set(str(r.get("appointmentID", "")) for r in reports if "appointmentID" in r))
 
+        selected_cust_id = st.selectbox("Filter by Customer ID", ["All"] + customer_ids)
+        selected_appt_id = st.selectbox("Filter by Appointment ID", ["All"] + appointment_ids)
 
+        # Apply filters
+        filtered_reports = reports
+        if selected_cust_id != "All":
+            filtered_reports = [r for r in filtered_reports if str(r.get("customerID", "")) == selected_cust_id]
+        if selected_appt_id != "All":
+            filtered_reports = [r for r in filtered_reports if str(r.get("appointmentID", "")) == selected_appt_id]
 
+        # Display
+        if not filtered_reports:
+            st.info("No matching reports found.")
+        else:
+            for rep in filtered_reports:
+                st.markdown(f"""
+                    <div style="
+                        border: 1px solid rgba(120, 120, 120, 0.3);
+                        padding: 10px;
+                        margin-bottom: 10px;
+                        border-radius: 8px;
+                        background-color: rgba(255, 255, 255, 0.05);
+                        backdrop-filter: blur(2px);
+                        color: inherit;
+                    ">
+                        <strong>📋 Report ID:</strong> {rep.get('reportID', '')}<br>
+                        <strong>👤 Customer ID:</strong> {rep.get('customerID', '')}<br>
+                        <strong>📎 Appointment ID:</strong> {rep.get('appointmentID', '')}<br>
+                        <strong>📅 Date:</strong> {rep.get('reportDate', '')}<br>
+                        <strong>📝 Content:</strong><br>
+                        <div style="margin-left: 15px;">{rep.get('reportContent', '')}</div>
+                    </div>
+                """, unsafe_allow_html=True)
 
 # --------------------------------------------
 # Logout
