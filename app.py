@@ -301,7 +301,9 @@ elif choice == "Available Slots":
                 st.rerun()
 
 
-# --------------------------------------------
+
+
+  # --------------------------------------------
 # Add Report
 elif choice == "Add Report":
     st.subheader("📝 Add Appointment Report")
@@ -312,19 +314,27 @@ elif choice == "Add Report":
     content = st.text_area("Report Content")
 
     if st.button("Save Report"):
-        if not all([customer_id, appt_id,  str(report_date), content]):
-            st.error("❌ Please complete all fields.")
+        if not all([customer_id, appt_id, content]):
+            st.error("Please complete all fields.")
         else:
-            save_report([customer_id, appt_id, str(report_date), content])
+            save_report([appt_id, str(report_date), content])
             st.success("✅ Report saved.")
 
     st.markdown("---")
     st.subheader("📄 View Submitted Reports")
 
     reports = get_all_reports()
+    appointments = get_appointments()
+
+    # Create a mapping of appointmentID to customerID
+    appt_to_customer = {str(a["appointmentID"]): str(a["customerID"]) for a in appointments}
+
+    # Attach customerID to each report
+    for rep in reports:
+        rep["customerID"] = appt_to_customer.get(str(rep["appointmentID"]), "Unknown")
 
     # Filter Options
-    customer_ids = sorted(set(r["customerID"] for r in reports))
+    customer_ids = sorted(set(r["customerID"] for r in reports if r["customerID"] != "Unknown"))
     appt_ids = sorted(set(r["appointmentID"] for r in reports))
 
     selected_cust_id = st.selectbox("🔍 Filter by Customer ID", ["All"] + customer_ids)
@@ -351,6 +361,7 @@ elif choice == "Add Report":
                     backdrop-filter: blur(2px);
                     color: inherit;
                 ">
+                    <strong>📋 Report ID:</strong> {rep['reportID']}<br>
                     <strong>👤 Customer ID:</strong> {rep['customerID']}<br>
                     <strong>📎 Appointment ID:</strong> {rep['appointmentID']}<br>
                     <strong>📅 Date:</strong> {rep['reportDate']}<br>
@@ -359,7 +370,6 @@ elif choice == "Add Report":
                 </div>
             """, unsafe_allow_html=True)
 
-  
 
 # --------------------------------------------
 # Logout
