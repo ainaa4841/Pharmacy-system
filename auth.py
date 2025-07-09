@@ -2,9 +2,26 @@ import streamlit as st
 import re
 from sheets_client import spreadsheet
 
-def register_user(customerID, customerUsername, customerPassword, customerName, customerEmail, customerNumber):
+from sheets_client import spreadsheet
+
+def register_user(username, password, customerName, customerEmail, customerNumber):
     worksheet = spreadsheet.worksheet("Customer")
-    worksheet.append_row([customerID, customerUsername, customerPassword, customerName, customerEmail, customerNumber])
+    
+    # Generate new customer ID (e.g., auto-increment)
+    records = worksheet.get_all_records()
+    new_id = f"C{len(records) + 1:03d}"  # e.g., C001, C002, ...
+
+    # Append new customer to the sheet
+    worksheet.append_row([
+        new_id,
+        username,
+        password,
+        customerName,
+        customerEmail,
+        customerNumber
+    ])
+
+    return new_id
 
 def login_user(username, password):
     try:
