@@ -307,6 +307,7 @@ elif choice == "Available Slots":
 elif choice == "Add Report":
     st.subheader("📝 Add Appointment Report")
 
+    # --- Report Submission ---
     customer_id = st.text_input("Customer ID")
     appt_id = st.text_input("Appointment ID")
     report_date = st.date_input("Report Date")
@@ -326,17 +327,17 @@ elif choice == "Add Report":
             save_report([report_id, customer_id, appt_id, str(report_date), content])
             st.success("✅ Report saved.")
 
-    st.markdown("---")
-    st.subheader("📄 View Submitted Reports")
+    # --- Interactive Report Viewer ---
+    st.markdown("### 📂 View Submitted Reports")
 
     reports = get_all_reports()
 
-    # Filter Options
+    # Get unique customer and appointment IDs
     customer_ids = sorted(set(str(r["customerID"]) for r in reports))
-    appt_ids = sorted(set(str(r["appointmentID"]) for r in reports))
+    appointment_ids = sorted(set(str(r["appointmentID"]) for r in reports))
 
-    selected_cust_id = st.selectbox("🔍 Filter by Customer ID", ["All"] + customer_ids)
-    selected_appt_id = st.selectbox("📎 Filter by Appointment ID", ["All"] + appt_ids)
+    selected_cust_id = st.selectbox("Filter by Customer ID", ["All"] + customer_ids)
+    selected_appt_id = st.selectbox("Filter by Appointment ID", ["All"] + appointment_ids)
 
     # Apply filters
     filtered_reports = reports
