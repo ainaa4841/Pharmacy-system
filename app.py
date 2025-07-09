@@ -316,24 +316,23 @@ elif choice == "Add Report":
         if not all([customer_id, appt_id, content]):
             st.error("Please complete all fields.")
         else:
-            save_report([appt_id, str(report_date), content])
+            # Generate reportID
+            reports = get_all_reports()
+            existing_ids = [int(r["reportID"].replace("R", "")) for r in reports if r["reportID"].startswith("R")]
+            next_id = max(existing_ids, default=0) + 1
+            report_id = f"R{next_id:04d}"
+
+            # Save report to sheet
+            save_report([report_id, customer_id, appt_id, str(report_date), content])
             st.success("✅ Report saved.")
 
     st.markdown("---")
     st.subheader("📄 View Submitted Reports")
 
     reports = get_all_reports()
-    appointments = get_appointments()
-
-    # Create a mapping of appointmentID to customerID
-    appt_to_customer = {str(a["appointmentID"]): str(a["customerID"]) for a in appointments}
-
-    # Attach customerID to each report
-    for rep in reports:
-        rep["customerID"] = appt_to_customer.get(str(rep["appointmentID"]), "Unknown")
 
     # Filter Options
-    customer_ids = sorted(set(r["customerID"] for r in reports if r["customerID"] != "Unknown"))
+    customer_ids = sorted(set(r["customerID"] for r in reports))
     appt_ids = sorted(set(r["appointmentID"] for r in reports))
 
     selected_cust_id = st.selectbox("🔍 Filter by Customer ID", ["All"] + customer_ids)
@@ -368,6 +367,7 @@ elif choice == "Add Report":
                     <div style="margin-left: 15px;">{rep['reportContent']}</div>
                 </div>
             """, unsafe_allow_html=True)
+
 
 
 # --------------------------------------------
