@@ -120,10 +120,10 @@ def save_file_metadata(data):
 def get_all_customers():
     return spreadsheet.worksheet("Customer").get_all_records()
 
-def save_report(data):
-    ws = spreadsheet.worksheet("Report")
-    rid = generate_next_id("Report", "reportID")
-    ws.append_row([rid] + data)
+def save_report(report_row):
+    worksheet = spreadsheet.worksheet("Reports")
+    worksheet.append_row(report_row)
+
 
 def get_all_reports():
     sheet = spreadsheet.worksheet("Report")  # adjust sheet name as needed
