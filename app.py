@@ -25,7 +25,7 @@ if 'logged_in' not in st.session_state:
     st.session_state.user_email = ''
     st.session_state.customer_id = ''
 
-menu = ["Login"]
+menu = ["Login", "Register"]
 if st.session_state.logged_in:
     if st.session_state.user_username in ["pharma01"]:  # Example username for Pharmacist
         menu = ["Manage Schedule", "Update Slot Availability", "Add Report", "Logout"]
