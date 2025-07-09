@@ -340,17 +340,26 @@ elif choice == "Add Report":
     if not filtered_reports:
         st.info("No matching reports found.")
     else:
-        for rep in filtered_reports:
-            st.markdown(f"""
-                <div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; border-radius: 5px; background-color: #f8f8f8;">
-                    <strong>👤 Customer ID:</strong> {rep['customerID']}<br>
-                    <strong>📎 Appointment ID:</strong> {rep['appointmentID']}<br>
-                    <strong>📅 Date:</strong> {rep['reportDate']}<br>
-                    <strong>📝 Content:</strong><br>
-                    <div style="margin-left: 15px;">{rep['reportContent']}</div>
-                </div>
-            """, unsafe_allow_html=True)
+    for rep in filtered_reports:
+        st.markdown(f"""
+            <div style="
+                border: 1px solid rgba(120, 120, 120, 0.3);
+                padding: 10px;
+                margin-bottom: 10px;
+                border-radius: 8px;
+                background-color: rgba(255, 255, 255, 0.05);
+                backdrop-filter: blur(2px);
+                color: inherit;
+            ">
+                <strong>👤 Customer ID:</strong> {rep['customerID']}<br>
+                <strong>📎 Appointment ID:</strong> {rep['appointmentID']}<br>
+                <strong>📅 Date:</strong> {rep['reportDate']}<br>
+                <strong>📝 Content:</strong><br>
+                <div style="margin-left: 15px;">{rep['reportContent']}</div>
+            </div>
+        """, unsafe_allow_html=True)
 
+  
 
 # --------------------------------------------
 # Logout
