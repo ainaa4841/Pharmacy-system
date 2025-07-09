@@ -44,8 +44,8 @@ def remove_schedule_slot(date, time):
     time = str(time).strip().lower()
 
     for idx, record in enumerate(records, start=2):  # offset header
-        rec_date = str(record["appointmentDate"]).strip().lower()
-        rec_time = str(record["appointmentTime"]).strip().lower()
+        rec_date = str(record["availableDate"]).strip().lower()
+        rec_time = str(record["availableTimeslot"]).strip().lower()
         if rec_date == date and rec_time == time:
             ws.delete_rows(idx)
             return
