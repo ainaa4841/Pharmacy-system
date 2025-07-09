@@ -37,7 +37,7 @@ def get_customer_id(username):
 
 def check_email_exists(email):
     worksheet = spreadsheet.worksheet("Customer")
-    return any(user["customerEmail"] == email for user in worksheet.get_all_records()))
+    return any(customer["customerEmail"] == email for user in worksheet.get_all_records()))
 
 def check_password_complexity(password):
     return len(password) >= 8 and re.search(r"[!@#$%^&*(),.?\":{}|<>]", password)
