@@ -319,7 +319,10 @@ elif choice == "Add Report":
         else:
             # Generate numeric reportID with no prefix
             reports = get_all_reports()
-            existing_ids = [int(r["reportID"]) for r in reports if str(r.get("reportID", "")).isdigit()]
+            existing_ids = [
+            int(r.get("reportID", 0)) for r in reports
+            if str(r.get("reportID", "")).isdigit()
+        ]
             next_id = max(existing_ids, default=0) + 1
             report_id = next_id
 
