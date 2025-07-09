@@ -54,22 +54,24 @@ def update_schedule(date, time):
     ws.append_row([date, time])
 
 def update_appointment_status(appointment_id, new_status, new_date=None, new_time=None):
-    worksheet = spreadsheet.worksheet("Appointments")
-    records = worksheet.get_all_records()
-    for idx, record in enumerate(records, start=2):  # Row 2 = data starts
-        if str(record["appointmentID"]) == str(appointment_id):
-            if new_status == "Cancelled":
-                worksheet.update_acell(f"D{idx}", "Cancelled")
-                restore_schedule_slot(record["appointmentDate"], record["appointmentTime"])
-            elif new_status == "Rescheduled":
-                old_date, old_time = record["appointmentDate"], record["appointmentTime"]
-                worksheet.update_acell(f"B{idx}", new_date)
-                worksheet.update_acell(f"C{idx}", new_time)
-                worksheet.update_acell(f"D{idx}", "Pending Confirmation")
-                restore_schedule_slot(old_date, old_time)
-                remove_schedule_slot(new_date, new_time)
-            else:
-                worksheet.update_acell(f"D{idx}", new_status)
+    sheet = client.open_by_key(SPREADSHEET_ID).worksheet("Appointments")
+    records = sheet.get_all_records()
+    
+    # Map column names to indices (1-based indexing for gspread)
+    header = sheet.row_values(1)
+    col_index = {name: idx + 1 for idx, name in enumerate(header)}
+
+    for i, row in enumerate(records):
+        if str(row.get("appointmentID")) == str(appointment_id):
+            row_number = i + 2  # +2 because row 1 is header, and list is 0-indexed
+
+            if new_date:
+                sheet.update_cell(row_number, col_index["appointmentDate"], new_date)
+            if new_time:
+                sheet.update_cell(row_number, col_index["appointmentTime"], new_time)
+            if new_status:
+                sheet.update_cell(row_number, col_index["appointmentStatus"], new_status)
+
             break
 
 def get_all_customers():
