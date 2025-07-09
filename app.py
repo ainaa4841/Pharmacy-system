@@ -116,10 +116,12 @@ elif choice == "Book Appointment":
 
 # --------------------------------------------
 # My Appointments
+# My Appointments
 elif choice == "My Appointments":
     st.subheader("📋 My Appointments")
 
     appointments = get_appointments()
+    st.write(appointments)  # Debugging line to check the structure of appointments
     my_appointments = [
         appt for appt in appointments
         if str(appt.get('customerID')) == str(st.session_state.customer_id)
@@ -128,17 +130,18 @@ elif choice == "My Appointments":
     if not my_appointments:
         st.info("No appointments found.")
     else:
-        active_appts = [appt for appt in my_appointments if appt['appointmentStatus'] in ["Pending Confirmation", "Confirmed", "Rescheduled"]]
-        past_appts = [appt for appt in my_appointments if appt['appointmentStatus'] in ["Cancelled", "Completed"]]
+        active_appts = [appt for appt in my_appointments if appt.get('appointmentStatus') in ["Pending Confirmation", "Confirmed", "Rescheduled"]]
+        past_appts = [appt for appt in my_appointments if appt.get('appointmentStatus') in ["Cancelled", "Completed"]]
 
         # --------------------
         # Section 1: Active
         st.markdown("### 🗓 Upcoming Appointments")
         for idx, appt in enumerate(active_appts):
             cols = st.columns([2, 2, 2, 2, 2])
-            cols[0].write(f"📅 *{appt['appointmentDate']}*")
-            cols[1].write(f"🕒 *{appt['appointmentTime']}*")
-            cols[2].write(f"📌 *{appt['appointmentStatus']}*")
+            cols[0].write(f"📅 *{appt.get('appointmentDate', 'N/A')}*")
+            cols[1].write(f"🕒 *{appt.get('appointmentTime', 'N/A')}*")
+            cols[2].write(f"📌 *{appt.get('appointmentStatus', 'N/A')}*")
+
 
             # RESCHEDULE BUTTON
             if cols[3].button("Reschedule", key=f"reschedule_{idx}"):
