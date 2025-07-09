@@ -14,6 +14,10 @@ def generate_next_id(sheet, col_name):
     if not records: return 1
     return int(records[-1][col_name]) + 1
 
+def register_user(username, password, full_name, email, phone):
+    worksheet = spreadsheet.worksheet("Customer")
+    worksheet.append_row([username, password, full_name, email, phone])
+
 def save_customer(data):
     ws = spreadsheet.worksheet("Customer")
     cid = generate_next_id("Customer", "customerID")
