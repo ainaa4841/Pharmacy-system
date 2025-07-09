@@ -4,24 +4,12 @@ from sheets_client import spreadsheet
 
 from sheets_client import spreadsheet
 
-def register_user(username, password, customerName, customerEmail, customerNumber):
+def register_user(username, password, full_name, email, phone):
     worksheet = spreadsheet.worksheet("Customer")
-    
-    # Generate new customer ID (e.g., auto-increment)
-    records = worksheet.get_all_records()
-    new_id = f"C{len(records) + 1:03d}"  # e.g., C001, C002, ...
+    customer_id = generate_next_id("Customer", "customerID", prefix="C")
+    worksheet.append_row([customer_id, username, password, full_name, email, phone])
+    return customer_id
 
-    # Append new customer to the sheet
-    worksheet.append_row([
-        new_id,
-        username,
-        password,
-        customerName,
-        customerEmail,
-        customerNumber
-    ])
-
-    return new_id
 
 def login_user(username, password):
     try:
