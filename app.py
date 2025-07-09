@@ -5,7 +5,7 @@ from google_sheets import (
     get_appointments, get_pharmacist_schedule,
     update_schedule, update_appointment_status,
     get_all_customers, save_report, get_all_reports,
-    restore_schedule_slot, register_user, remove_schedule_slot
+    restore_schedule_slot, remove_schedule_slot
 )
 import os
 import pandas as pd
