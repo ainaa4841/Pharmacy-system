@@ -312,7 +312,7 @@ elif choice == "Add Report":
     content = st.text_area("Report Content")
 
     if st.button("Save Report"):
-        if not all([customer_id, appt_id, content]):
+        if not all([customer_id, appt_id,  str(report_date), content]):
             st.error("❌ Please complete all fields.")
         else:
             save_report([customer_id, appt_id, str(report_date), content])
